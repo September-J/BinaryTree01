@@ -1,5 +1,7 @@
 package Tree.BinaryTree01;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 class TreeNode{
@@ -55,6 +57,30 @@ public class BinaryTreeDemo {
         makeMirror(root.left);
         makeMirror(root.right);
         return root;
+    }
+    //给定两个树，找最近公共祖先
+    //最关键的点：从最近公共祖先开始去找两个结点，一定都能找到，但一定不在同一个子树中
+    private TreeNode lca = null;//保存最终结果
+    public TreeNode lowestCommonAncestor(TreeNode root,TreeNode p,TreeNode q){
+        //1.借助一个辅助函数，在root中递归查找p和q
+        if (root == null) {
+            return null;
+        }
+        findNode(root,p,q);//辅助函数
+        return lca;
+    }
+    private boolean findNode(TreeNode root,TreeNode p,TreeNode q){
+        if(root == null){
+            return false;
+        }
+        int left = findNode(root.left,p,q)?1:0;//2.递归在左子树中查找
+        int right = findNode(root.right,p,q)?1:0;//3.递归在右子树查找
+        int mid = (root == p || root == q)?1:0;//3.对比根结点
+        if(left + right + mid >= 2){
+            //3.如果这个三个位置，有两个地方找到了，说明这个当前结点就是要找的最近公共祖先
+            lca = root;
+        }
+        return (left + right + mid) > 0;
     }
 
 
